@@ -1,24 +1,89 @@
-**Azure SIEM Honeypot Lab**
+<div align="center">
 
-Overview
+# 🚨 Azure SIEM Honeypot Project
 
-Deployed a cloud-based honeypot in Microsoft Azure to capture and analyze real-world attack traffic using Microsoft Defender and KQL.
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:203a43,100:2c5364&height=180&section=header&text=Azure%20SIEM%20Honeypot%20Lab&fontSize=40&fontColor=ffffff&animation=fadeIn&fontAlignY=35" />
 
-**Technologies**
+### Microsoft Azure • Microsoft Sentinel • Log Analytics • KQL • Threat Detection
 
-Microsoft Azure
+</div>
 
-Microsoft Defender (SIEM)
+---
 
+# 📖 Project Overview
+
+This project demonstrates the deployment of a cloud-based honeypot environment in Microsoft Azure to capture, analyze, and visualize real-world attack traffic.
+
+A Windows virtual machine was intentionally exposed to the internet to attract unauthorized login attempts. Security events were collected using Azure Log Analytics Workspace and analyzed through Microsoft Sentinel using KQL queries.
+
+The project simulates core SOC analyst workflows, including:
+
+- Cloud infrastructure deployment
+- Honeypot configuration
+- Security log ingestion
+- Failed login analysis
+- KQL-based investigation
+- GeoIP enrichment
+- Attack map visualization
+
+---
+
+# 🧰 Technologies Used
+
+- Microsoft Azure
+- Microsoft Sentinel SIEM
+- Log Analytics Workspace
+- Windows Virtual Machine
+- Azure Network Security Groups (NSGs)
+- Windows Security Event Logs
+- KQL / Kusto Query Language
+- GeoIP Enrichment
+- Attack Map Visualization
+
+---
+
+# 🏗️ Lab Architecture
+
+```text
+Internet
+   |
+   v
+Azure Network Security Group
+   |
+   v
+Windows Honeypot VM
+   |
+   v
+Azure Monitor Agent
+   |
+   v
 Log Analytics Workspace
+   |
+   v
+Microsoft Sentinel
+   |
+   v
+KQL Queries + Attack Map Dashboard
+```
 
-KQL (Kusto Query Language)
+---
 
-Windows Event Logs
+# 🎯 Lab Objectives
 
+- Deploy a Windows VM in Microsoft Azure
+- Configure the VM as an exposed honeypot
+- Allow inbound traffic through NSG rules
+- Collect Windows Security Event Logs
+- Detect failed login attempts using Event ID 4625
+- Analyze attacker IP addresses with KQL
+- Enrich logs with geographic location data
+- Visualize attack activity using a custom map dashboard
 
-**1. Initial Setup**
-Created resource group, virtual network, and VM.
+---
+
+# 🔹 Phase 1: Azure Environment Setup
+
+A resource group, virtual network, and Windows virtual machine were created in Microsoft Azure to serve as the foundation for the honeypot lab.
 
 ![Resource Group](screenshots/initial-setup/1-creating-resource-group.jpg)
 
@@ -30,11 +95,13 @@ Created resource group, virtual network, and VM.
 
 ![Verification](screenshots/initial-setup/5-verification.jpg)
 
+---
 
+# 🔹 Phase 2: Network Security Group Configuration
 
-**2. Network Security Group (NSG)**
+The Azure Network Security Group was configured to allow inbound traffic to the virtual machine. This intentionally increased exposure so the honeypot could attract real-world unauthorized access attempts.
 
-Configured inbound rules to allow traffic for honeypot behavior.
+> Note: This configuration was used strictly for lab and monitoring purposes. In production environments, inbound access should be restricted using least privilege principles.
 
 ![Selecting NSG](screenshots/creating-network-security-group/1.%20Selecting%20NSG.jpg)
 
@@ -46,12 +113,11 @@ Configured inbound rules to allow traffic for honeypot behavior.
 
 ![New Rule](screenshots/creating-network-security-group/5.%20New%20Security%20Rule.jpg)
 
+---
 
+# 🔹 Phase 3: Windows Firewall Configuration
 
-
-**3. Disable Windows Firewall**
-
-Disabled firewall to increase visibility of inbound attacks.
+Windows Firewall was disabled inside the virtual machine to ensure inbound traffic could reach the honeypot. This increased visibility into unsolicited connection attempts and failed authentication activity.
 
 ![Retrieve IP](screenshots/disabling-windows-fw-on-vm/1.%20Retrieving%20IP%20Address.jpg)
 
@@ -65,10 +131,11 @@ Disabled firewall to increase visibility of inbound attacks.
 
 ![Failed Login](screenshots/disabling-windows-fw-on-vm/6.%20Failed%20Login%20Attempt.jpg)
 
+---
 
-**4. Log Collection & SIEM (Sentinel)**
+# 🔹 Phase 4: Log Collection & Microsoft Sentinel Integration
 
-Forwarded Windows Security logs to Log Analytics and connected Microsoft Defender.
+A Log Analytics Workspace was created to collect Windows Security logs from the honeypot VM. Microsoft Sentinel was then connected to the workspace to provide SIEM functionality.
 
 ![Create LAW](screenshots/creating-log-repository/1.%20Creating%20LAW.jpg)
 
@@ -82,19 +149,28 @@ Forwarded Windows Security logs to Log Analytics and connected Microsoft Defende
 
 ![AMA Extension](screenshots/creating-log-repository/6.%20AMA%20Connector%20Added%20to%20VM%20Extension.jpg)
 
+---
 
-**5. KQL Queries**
+# 🔹 Phase 5: KQL Investigation
 
-Queried failed login attempts (Event ID 4625):
+KQL was used to query failed authentication attempts from Windows Security Event Logs.
 
+The primary event analyzed was:
+
+```text
+Event ID 4625 — Failed Logon Attempt
+```
+
+Example KQL query:
+
+```kql
 SecurityEvent
-
 | where EventID == 4625
-
 | summarize FailureCount = count() by IpAddress
-
 | order by FailureCount desc
+```
 
+This query identifies source IP addresses generating failed login attempts and ranks them by frequency.
 
 ![KQL Query](screenshots/kql-queries/1.%20Security%20Event%20KQL%20Query.jpg)
 
@@ -106,36 +182,74 @@ SecurityEvent
 
 ![6300 Login Attempts](screenshots/kql-queries/5.%206300%20Login%20Attempts.jpg)
 
+---
 
-**6. Attack Map (GeoIP Enrichment)**
+# 🔹 Phase 6: GeoIP Enrichment & Attack Map Visualization
 
-Mapped attacker IPs to geographic locations.
+Attacker IP addresses were enriched with geographic location data to identify the source countries and regions associated with failed login activity.
 
+A custom attack map was created to visualize global threat activity targeting the honeypot.
 
 ![Attack Map](screenshots/kql-queries/6.%20Attack%20Map%20After%2018%20Hours.jpg)
 
+---
 
+# 📊 Results
 
+During the lab, the honeypot captured real-world unauthorized access attempts from the public internet.
 
-**Results**
+Key results included:
 
-Captured real failed login attempts
+- Captured real failed login attempts
+- Identified attacker source IP addresses
+- Enriched attacker IP data with geographic location
+- Visualized global attack activity on a custom dashboard
+- Observed over 6,000 failed login attempts within approximately 18 hours
 
-Identified attacker IPs and locations
+---
 
-Visualized global attack patterns
+# 🧠 Lessons Learned
 
-Observed over 6,000+ failed login attempts within 18 hours
+This project reinforced several core SOC analyst concepts:
 
+- Publicly exposed systems are quickly discovered by attackers
+- Failed login events are valuable indicators of brute-force activity
+- Event ID 4625 is critical for Windows authentication monitoring
+- SIEM tools help centralize and analyze security telemetry
+- KQL enables fast investigation of large log datasets
+- GeoIP enrichment improves situational awareness
+- Cloud security requires careful NSG and firewall configuration
 
+---
 
-**Skills Demonstrated**
+# 💼 Skills Demonstrated
 
-SIEM configuration and log analysis
+## SIEM & Detection Engineering
+- Microsoft Sentinel configuration
+- Security event collection
+- Log Analytics Workspace setup
+- KQL querying
+- Failed login detection
+- Threat visualization
 
-Threat detection and investigation
+## Cloud Security
+- Microsoft Azure VM deployment
+- Network Security Group configuration
+- Public exposure risk analysis
+- Azure Monitor Agent configuration
 
-KQL querying
+## SOC Analyst Skills
+- Windows Event Log analysis
+- Brute-force detection
+- Source IP investigation
+- GeoIP enrichment
+- Dashboard creation
+- Security monitoring workflow
 
-Azure cloud security
+---
 
+# 🚀 Final Takeaway
+
+This project demonstrates how a SOC analyst can use Microsoft Azure, Microsoft Sentinel, and KQL to collect, analyze, and visualize real-world attack traffic.
+
+The lab highlights the importance of centralized logging, cloud security monitoring, and investigative querying in modern security operations.
