@@ -4,6 +4,28 @@
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:203a43,100:2c5364&height=180&section=header&text=Azure%20SIEM%20Honeypot%20Lab&fontSize=40&fontColor=ffffff&animation=fadeIn&fontAlignY=35" />
 
+<div align="center">
+
+<table>
+<tr>
+<td align="center">
+
+<h3>🛡️ Cyber Range Scenario Credit 🛡️</h3>
+
+<strong>This attack scenario was provided by Josh Madakor, CEO of The Cyber Range.</strong>
+
+<br><br>
+
+<a href="https://www.skool.com/cyber-range">
+  <img src="https://img.shields.io/badge/JOIN%20THE%20CYBER%20RANGE-CLICK%20HERE-red?style=for-the-badge&labelColor=000000&color=ff0000" alt="Join The Cyber Range">
+</a>
+
+</td>
+</tr>
+</table>
+
+</div>
+
 ### Microsoft Azure • Microsoft Sentinel • Log Analytics • KQL • Threat Detection
 
 </div>
